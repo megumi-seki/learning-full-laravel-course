@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CarController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -7,34 +8,15 @@ Route::get('/', function () {
 
 });
 
-Route::view('/about', 'about')->name("about");
+Route::view("/about", "about")->name("about");
 
-//route caching is recommended once you deploy your project on production 
-
-/*Fallback Routes
-Route::fallback(function(){
-    return"Fallback";
+/* group controller
+Route::controller(CarController::class)->group(function(){
+    Route::get("/car", "index");
+    Route::get("/my-cars", "myCars");
 });*/
 
-/* group route
-Route::prefix("admin")->group(function(){
-    Route::get("/users", function (){});
-});
-
-
-Route::name("admin.")->group(function(){
-    Route::get("/users", function (){
-        return "/users";
-    })->name("users");
-    // the route name is gonna be admin.users!!
-});*/
-
-/* redirect by route
-Route::get("/user/profile", function(){})->name("profile");
-
-Route::get("/current-user", function(){
-//    return redirect()->route("profile");
-
-    return to_route("profile");
-});*/
+/* single action controllers
+Route::get("/car/invokable", CarController::class);
+Route::get("/car", [CarController::class, "index"]);*/
 
