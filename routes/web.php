@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\CarController;
+use App\Http\Controllers\ProductController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -10,13 +11,9 @@ Route::get('/', function () {
 
 Route::view("/about", "about")->name("about");
 
-/* group controller
-Route::controller(CarController::class)->group(function(){
-    Route::get("/car", "index");
-    Route::get("/my-cars", "myCars");
-});*/
+Route::apiResources([
+    "cars" => CarController::class,
+    "products" => ProductController::class,
+]);
 
-/* single action controllers
-Route::get("/car/invokable", CarController::class);
-Route::get("/car", [CarController::class, "index"]);*/
 
