@@ -1,61 +1,49 @@
 <h1>Hello From Laravel Course</h1>
 
-<!-- this comment is visible -->
-{{-- This comment is invisible --}}
+{{-- @foreach ($hobbies as $h)
+    @foreach ($hobbies as $h)
+        {{ $loop->depth }}
+        {{ $loop->parent->depth }}
+    @endforeach
+@endforeach --}}
 
-{{-- every directive needs to be closed --}}
-@if (false) This will be displayed @endif
-@unless () 
-@isset()
-@empty()
-@auth {{--check if user is authenticated--}}
-@guest {{--check if user is guest--}}
-@switch()
-    @case()
-        @break
-    @case()
-        @break
-    @default
-@endswitch
+{{-- <div @class([
+    "my-css-class",
+    "georgea" => $country === "ge"
+    ])
+    @style([
+        "color: green",
+        "background-color: cyan" => $country === "ge"
+    ])>
+    Lorem ipsum dolor sit amet consectetur, adipisicing elit. Illo, quia itaque, pariatur eveniet blanditiis odio facilis nemo placeat recusandae sapiente quos excepturi obcaecati ex magnam autem libero necessitatibus inventore temporibus.
 
-@for ($i =0; $i < 5; $i++)
-    <p> {{ $i + 1 }} </p>
-@endfor
+</div> --}}
+
+{{-- @include("shared.button", ["color" => "yellow", "text" => "submit"])
+
+@php
+    $cars = [];
+@endphp
 
 @foreach ($cars as $car)
-    <p>Model: {{ $car->model }}</p>
+    @include("car.view", ["car" => $car])
 @endforeach
 
-@forelse ($cars as $car)
-    <p>Model: {{ $car->model }}</p>
-@empty
-    <p>There are no cars</p>
-@endforelse
+@each("car.view", $cars, "car", "car.empty") --}}
 
-@while (false)
-    
-@endwhile
+{{-- @includeIf("shared.search_form", ["year" => 2019])
+@includeWhen($searchKeyword, "shared.search_results", ["year" => 2019])
+@includeUnless(!$searchKeyword, "shared.search_results", ["year" => 2019])
+@includeFirst(['admin.button', 'button'], ['some' => 'data']) --}}
 
-@foreach ([1, 2, 3, 4, 5] as $num)
-    @if ($num == 2)
-        @continue
-    @endif
-    <p>{{$num}}</p>
-@endforeach
+<?php 
+$city = "tokyo";
+?>
+@php
+$city = "tokyo"   
+@endphp
 
-@foreach ([1, 2, 3, 4, 5] as $num)
-    @continue($num ==2)
-    <p>{{$num}}</p>
-@endforeach
-
-@foreach ([1, 2, 3, 4, 5] as $num)
-    @if ($num == 4)
-        @break
-    @endif
-    <p>{{$num}}</p>
-@endforeach
-
-@foreach ([1, 2, 3, 4, 5] as $num)
-    @break($num == 4)
-    <p>{{$num}}</p>
-@endforeach
+<?php 
+use Illuminate\Support\Str;
+?>
+@use('Illuminate\Support\Str;')

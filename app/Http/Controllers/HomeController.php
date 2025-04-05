@@ -12,6 +12,7 @@ class HomeController extends Controller
         return view("home.index")
         ->with("name", "Megumi")
         ->with("surname", "Seki")
+        ->with("country", "ge")
         ->with("job", "<b>Student</b>")
         ->with("hobbies", ["Tennis", "Fishing"]);
     }
