@@ -807,9 +807,11 @@
         </section>
         <!--/ New Cars -->
       </main>
-      @section("footerLinks")
-          @parent
-          <a href="#">Link 3</a>
-          <a href="#">Link 4</a>
-      @endsection
+      
+@endsection
+
+
+@section("footerLinks")
+  <a href="#">Link 1</a>
+  <a href="#">Link 2</a>
 @endsection

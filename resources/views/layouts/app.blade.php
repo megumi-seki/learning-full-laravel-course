@@ -1,16 +1,38 @@
 @extends("layouts.clean")
 
-
-
     @section("childContent")
         @include("layouts.partials.header")
         @yield("content")
-        <footer>
-            @section("footerLinks")
-                <a href="#">Link 1</a>
-                <a href="#">Link 2</a>
-            @show
-        </footer>
+        @hasSection("footerLinks")     
+            <footer>
+                 @yield("footerLinks")
+            </footer>         
+        @endif
     @endsection 
 
 
+{{-- more directries
+@hasSection("footerLinks")     
+    <footer>
+         @yield("footerLinks")
+    </footer>         
+@endif
+
+@sectionMissing("navigation")
+    <div>
+      @include("default-navigation")
+    </div>  
+@endif
+
+<input type="checkbox/radio" @checked(BOOLEAN_EXPRESSION)>
+<input type="checked/radio" @disabled(BOOLEAN_EXPRESSION)>
+<input type="text" @readonly(BOOLEAN_EXPRESSION)>
+<input type="text" @required(BOOLEAN_EXPRESSION)>
+
+<select name="year">
+    @foreach ($years as $year)
+        <option value="{{ $year }}" @selected($year == date("Y"))>
+            {{ $year }}
+        </option>
+    @endforeach
+</select> --}}
