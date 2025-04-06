@@ -11,7 +11,7 @@
     @endsection 
 
 
-{{-- more directries
+{{-- more directives
 @hasSection("footerLinks")     
     <footer>
          @yield("footerLinks")
