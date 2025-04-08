@@ -94,13 +94,13 @@ class HomeController extends Controller
         // $user = User::find(1);
         // dd($user->favoriteCars);
 
-        $user = User::find(1);
+        // $user = User::find(1);
         // $user->favoriteCars()->attach([1, 2]);
 
         // delete all the existing ones and attach news
         // $user->favoriteCars()->sync([3]);
 
-        $user->favoriteCars()->detach();
+        // $user->favoriteCars()->detach();
 
         return view("home.index");
     }
