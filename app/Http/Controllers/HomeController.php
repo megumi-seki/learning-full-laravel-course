@@ -8,6 +8,8 @@ use App\Models\Maker;
 use App\Models\CarFeatures;
 use App\Models\CarImage;
 use App\Models\CarType;
+use App\Models\User;
+
 
 
 class HomeController extends Controller
@@ -84,6 +86,21 @@ class HomeController extends Controller
         // $car->carType()->associate($carType);
         // $car->save();
 
+
+        // Many to many relationships
+        // $car = Car::find(1);
+        // dd($car->favouredUsers);
+
+        // $user = User::find(1);
+        // dd($user->favoriteCars);
+
+        $user = User::find(1);
+        // $user->favoriteCars()->attach([1, 2]);
+
+        // delete all the existing ones and attach news
+        // $user->favoriteCars()->sync([3]);
+
+        $user->favoriteCars()->detach();
 
         return view("home.index");
     }
