@@ -116,10 +116,24 @@ class HomeController extends Controller
 
 
         // update mass data
-        Car::where("published_at", null)
-            ->where("user_id", 1)
-            ->update(["published_at" => now()]);
+        // Car::where("published_at", null)
+        //     ->where("user_id", 1)
+        //     ->update(["published_at" => now()]);
 
+
+        // delete single data
+        // $car = Car::find(1);
+        // $car->delete();
+
+        // delete mass data
+        // Car::destroy(2, 3);
+
+        // Car:: where("published_at", null)
+        //     ->where("user_id", 1)
+        //     ->delete();
+
+        // delete every data from the database without softdelete
+        // Car::truncate();
 
         return view("home.index");
     }
