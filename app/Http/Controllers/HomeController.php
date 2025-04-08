@@ -7,6 +7,8 @@ use App\Models\FuelType;
 use App\Models\Maker;
 use App\Models\CarFeatures;
 use App\Models\CarImage;
+use App\Models\CarType;
+
 
 class HomeController extends Controller
 {
@@ -63,7 +65,24 @@ class HomeController extends Controller
         //     ["image_path" => "something", "position" =>7]
         // ]);
 
+        // Many-to-One Relations
+        // $car = Car::find(1);
+        // dd($car->CarType);
 
+        // $carType = CarType::where("name", "Hatchback")->first();
+        // dd($carType->cars);
+        // The above does the same thing as the below
+        // $cars = Car::whereBelongsTo($carType)->get();
+        // dd($cars);
+
+        // $car = Car::find(1);
+        // $carType = CarType::where("name", "Sedan")->first();
+
+        // // $car->car_type_id = $carType->id;
+        // // $car->save();
+        // The above does the same thing as the below
+        // $car->carType()->associate($carType);
+        // $car->save();
 
 
         return view("home.index");
