@@ -115,6 +115,12 @@ class HomeController extends Controller
         // dump($car);
 
 
+        // update mass data
+        Car::where("published_at", null)
+            ->where("user_id", 1)
+            ->update(["published_at" => now()]);
+
+
         return view("home.index");
     }
 }
