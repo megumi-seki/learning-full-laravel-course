@@ -19,21 +19,9 @@ class HomeController extends Controller
     public function index()
     {
    
-        // Maker::factory()
-        // ->count(1)
-        // ->hasModels(1, function(array $attributes, Maker $maker) {
-        //     return [];
-        // })
-        // ->has(Model::factory()->count(3))
-        // ->create();
-
-        // $maker = Maker::factory()->create();
-        // Model::factory()
-        //     ->count(5)
-        //     ->for($maker)
-        //     // ->forMaker(["name" => "Lexus"])
-        //     // ->for(Maker::factory()->state(["name" => "Lexus"]))
-        //     //
+        // User::factory()
+        //     ->has(Car::factory()->count(5), relationship: "favoriteCars") 
+        //     // ->hasAttached(Car::factory()->count(5), ["col1" => "va", "favoriteCars"])
         //     ->create();
 
         return view("home.index");

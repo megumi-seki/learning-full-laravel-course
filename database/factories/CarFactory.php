@@ -29,12 +29,12 @@ class CarFactory extends Factory
             "maker_id" => Maker::inRandomOrder()->first()->id,
             "model_id" => function(array $attributes) {
                 return Model::where("maker_id", $attributes["maker_id"])
-                    ->inRandomOrder()->first->id;
+                    ->inRandomOrder()->first()->id;
             },
             "year" => fake()->year(),
             "price" => ((int)fake()->randomFloat(2, 5, 100)) * 1000,
             "vin" => strtoupper(Str::random(17)),
-            "mileage" => ((int)fake()->ramdomFloat(2, 5, 500)) * 1000,
+            "mileage" => ((int)fake()->randomFloat(2, 5, 500)) * 1000,
             "car_type_id" => CarType::inRandomOrder()->first()->id,
             "fuel_type_id" => FuelType::inRandomOrder()->first()->id,
             "user_id" => User::inRandomOrder()->first()->id,
