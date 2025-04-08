@@ -27,6 +27,15 @@ class HomeController extends Controller
         // ->has(Model::factory()->count(3))
         // ->create();
 
+        // $maker = Maker::factory()->create();
+        // Model::factory()
+        //     ->count(5)
+        //     ->for($maker)
+        //     // ->forMaker(["name" => "Lexus"])
+        //     // ->for(Maker::factory()->state(["name" => "Lexus"]))
+        //     //
+        //     ->create();
+
         return view("home.index");
     }
 }
