@@ -16,4 +16,8 @@ class FuelType extends Model
     // const CREATED_AT = "create_date"; customize the column name
     // const UPDATE_AT = null; disable updated_at column
     public $timestamps = false;
+
+    protected $fillable = [
+        "name"
+    ];
 }
