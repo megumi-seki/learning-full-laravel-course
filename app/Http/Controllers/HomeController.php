@@ -57,34 +57,62 @@ class HomeController extends Controller
         // $car->save();
 
         // Insert data with associative array
-        $carData = [
-            "maker_id" => 1,
-            "model_id" => 1,
-            "year" => 2024,
-            "price" => 200000,
-            "vin" => "999",
-            "mileage" => 5000,
-            "car_type_id" => 1,
-            "fuel_type_id" => 2,
-            "user_id" => 1,
-            "city_id" => 1,
-            "address" => "Something",
-            "phone" => "999",
-            "description" => null,
-            "published_at" => now(),
-        ];
+        // $carData = [
+        //     "maker_id" => 1,
+        //     "model_id" => 1,
+        //     "year" => 2024,
+        //     "price" => 200000,
+        //     "vin" => "999",
+        //     "mileage" => 5000,
+        //     "car_type_id" => 1,
+        //     "fuel_type_id" => 2,
+        //     "user_id" => 1,
+        //     "city_id" => 1,
+        //     "address" => "Something",
+        //     "phone" => "999",
+        //     "description" => null,
+        //     "published_at" => now(),
+        // ];
 
         // Approach 1
         // $car = Car::create($carData);
 
-        // // Approach 2
+        // Approach 2
         // $car2 = new Car();
         // $car2->fill($carData);
         // $car2->save();
 
-        // // Approach 3
-        $car3 = new Car($carData);
-        $car3->save();
+        // Approach 3
+        // $car3 = new Car($carData);
+        // $car3->save();
+
+        // Update the data 
+        // $car = Car::find(1);
+        // $car->price = 1000;
+        // $car->save();
+
+        // Update or create new data if there's no matched data
+        // $carData = [
+        //         "maker_id" => 1,
+        //         "model_id" => 1,
+        //         "year" => 2024,
+        //         "price" => 200000,
+        //         "vin" => "9999",
+        //         "mileage" => 5000,
+        //         "car_type_id" => 1,
+        //         "fuel_type_id" => 2,
+        //         "user_id" => 1,
+        //         "city_id" => 1,
+        //         "address" => "Something",
+        //         "phone" => "999",
+        //         "description" => null,
+        //         "published_at" => now(),
+        //     ];
+        // $car = Car::updateOrCreate(
+        //     ["vin" => "9999", "price" => 200000],
+        //     $carData);
+        
+        // dump($car);
 
 
         return view("home.index");
