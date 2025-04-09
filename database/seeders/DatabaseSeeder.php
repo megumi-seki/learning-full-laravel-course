@@ -130,3 +130,76 @@ class DatabaseSeeder extends Seeder
             ->create();
     }
 }
+
+
+
+/*// Query Data - Different Methods
+
+// Query Data without model
+$cars = DB::table("cars")->get();
+dd($cars);
+
+// Query Data with model
+$query = Car::query();
+// Use any methods fro query class: where, orderBy, limit, etc...
+// Select all records
+$car = Car::get();
+// Select a single record
+$car = Car::first();
+
+// Select a single value
+// Get a single value from the first car
+$highestPrice = Car::orderBy("price", "desc")->valuue("price");
+
+// Select list of values of a single column
+// Select list of prices sorted by pricein descending order
+$prices = Car::orderBy("price", "desc")->pluck("price");
+// Select list of prices and return associative array with car id as key
+$prices = Car::orderBy("price", "desc")->pluck("price", "id");
+
+// Check if a specific user has/does not have cars
+if (Car::where("user_id", 1)->exists()) {
+    // User has cars
+}
+if (Car::wheer("user_id", 1)->doesntExist()) {
+    // User does not have cars
+}
+
+// Specify select
+// Select only vin code and price of the cars
+$cars = Car::select("vin", "price as car_price")->get();
+// You can also add another columns in select at later stage
+$query = Car::select("vin", "price as car_price");
+// Each car will have 3 columns selected: vin, price with name car_price and mileage
+$cars = $query->addSelect("mileage")->get();
+
+// Select Distinct records
+// Select distinct maker and models from the cars
+$distinct = Car::select ("maker_id", "model_id")
+                ->distinct()
+                ->get();
+
+// Limit and Offset
+// Using limit and offset. Select 10 cars starting from 6th
+$cars = Car::limit(10)->offset(5)->get();
+// The same as above. Using skip and take. Skip 5 cars and take 10
+$cars = Car::skip(5)->take(10)->get();
+
+// Select record count
+$carCount = Car::where("published_at", "!=", null)
+                ->count();
+
+// Select minimun, maximun and average price
+// Select minimun, maximun and average price of the cars
+$minPrice = Car::where("published_at", "!=", null)
+                ->min("price");
+$maxPrice = Car::where("published_at", "!=", null)
+                ->max("price");
+$avgPrice = Car::where("published_at", "!=", null)
+                ->avg("price");
+
+// Select car IDs with how many images each car has
+$cars = CarImage::selectRaw("car_id, count(*) as image_count")
+    ->groupBy("car_id")
+    ->get();
+dd($cars[0]);*/
