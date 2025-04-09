@@ -8,10 +8,10 @@ use App\Models\CarImage;
 use App\Models\CarType;
 use App\Models\City;
 use App\Models\FuelType;
-use App\Models\Model;
 use App\Models\State;
 use App\Models\Maker;
 use App\Models\User;
+use App\Models\CarModel;
 use Illuminate\Database\Eloquent\Factories\Sequence;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -88,7 +88,7 @@ class DatabaseSeeder extends Seeder
             Maker::factory()
             ->state(["name" => $maker])
             ->has(
-                Model::factory()
+                CarModel::factory()
                     ->count(count($models))
                    ->sequence(...array_map(fn($model) => ["name" => $model], $models))
                 )

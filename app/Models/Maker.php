@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use App\Models\CarModel;
 
 class Maker extends Model
 {
@@ -20,8 +21,8 @@ class Maker extends Model
         return $this->hasMany(Car::class);
     }
 
-    public function models(): HasMany
+    public function carModels(): HasMany
     {
-        return $this->hasMany(\App\Models\Model::class);
+        return $this->hasMany(CarModel::class);
     }
 }

@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model as EloquentModel;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class Model extends EloquentModel
+class CarModel extends EloquentModel
 {
     use HasFactory;
     public $timestamps = false;

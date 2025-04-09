@@ -47,9 +47,9 @@ class Car extends Model
         return $this->belongsTo(Maker:: class);
     }
 
-    public function model(): BelongsTo
+    public function carModel(): BelongsTo
     {
-        return $this->belongsTo(Model:: class);
+        return $this->belongsTo(CarModel:: class);
     }
 
     public function owner(): BelongsTo
