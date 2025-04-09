@@ -20,12 +20,11 @@ return new class extends Migration
             $table->boolean("cruise_control")->default(0);
             $table->boolean("bluetooth_connectivity")->default(0);
             $table->boolean("remote_start")->default(0);
-            $table->boolean("gps")->default(0);
-            $table->boolean("navigation")->default(0);
+            $table->boolean("gps_navigation")->default(0);
             $table->boolean("heated_seats")->default(0);
             $table->boolean("climate_control")->default(0);
             $table->boolean("rear_parking_sensors")->default(0);
-            $table->boolean("lether_seats")->default(0);
+            $table->boolean("leather_seats")->default(0);
         });
     }
 

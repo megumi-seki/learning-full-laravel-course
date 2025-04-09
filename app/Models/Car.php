@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Once;
+use Carbon\Carbon;
 
 class Car extends Model
 {
@@ -82,4 +83,9 @@ class Car extends Model
     {
         return $this->belongsToMany(User::class, "favorite_cars");
     }    
+
+    public function getCreateDate(): String 
+    {
+        return (new Carbon($this->created_at))->format("Y-m-d");
+    }
 }

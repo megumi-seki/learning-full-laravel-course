@@ -22,12 +22,11 @@ class CarFeatures extends Model
         "cruise_control",
         "bluetooth_connectivity",
         "remote_start",
-        "gps",
-        "navigation",
+        "gps_navigation",
         "heated_seats",
         "climate_control",
         "rear_parking_sensors",
-        "lether_seat"
+        "leather_seat"
     ];
 
     public function car(): BelongsTo

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Car;
 use Illuminate\Http\Request;
+use App\Models\User;
 
 class CarController extends Controller
 {
@@ -12,7 +13,18 @@ class CarController extends Controller
      */
     public function index()
     {
-        return view("car.index");
+        $cars = User::find(4)
+            ->cars()
+            ->orderBy("created_at", "desc")
+            ->get();
+        return view("car.index", ["cars" => $cars]);
+    }
+
+    public function watchlist()
+    {
+        // TODO we come back to this
+        $cars = User::find(4)->favoriteCars;
+        return view("car.watchlist", ["cars" => $cars]);
     }
 
     /**
@@ -36,7 +48,7 @@ class CarController extends Controller
      */
     public function show(Car $car)
     {
-        return view("car.show");
+        return view("car.show", ["car" => $car]);
     }
 
     /**
