@@ -80,11 +80,24 @@ class CarController extends Controller
 
     public function search()
     {
-        $query = Car::where("published_at", "<", now())
+        $query = Car::select("cars.*") // if you use join() method it's good practice to set select() like this
+            ->where("published_at", "<", now())
             ->with(["primaryImage", "city", "maker", "carType", "fuelType", "carModel"])
             ->orderBy("published_at", "desc");
+        
+        // Join cars table and cities table together when cities.id = cars.city_id, and filer it by cities.state_id
+        $query->join("cities", "cities.id", "=", "cars.city_id")
+            ->join("car_types", "car_types.id", "=", "cars.car_type_id")
+            ->where("cities.state_id", 1)
+            ->where("car_types.name", "SUV");
+
+        // Select all the cars values and name of cities table as city_name
+        // $query->select("cars.*", "cities.name as city_name");
+
         $carCount = $query->count();
-        $cars = $query->limit(30)->get();
+        $cars = $query->limit(value: 30)->get();
+
+        dd($cars[0]);
         return view("car.search", ["cars" => $cars, "carCount" => $carCount]);
     }
 }
@@ -120,3 +133,12 @@ $cars = $query->reorder() // removes existing ordering
 
 // Or you can also do
 $cars = $query->reorder("price")->get();*/
+
+
+// Advanced Join Clauses
+// $query = Car::select("cars.*");
+// $query->join("car_images", function(JoinClause $join) {
+//             $join->on("cars.id", "=", "car_images.car_id")
+//                     // ->orOn(/* Second Condition */)
+//                     ->where("car_images.position", "=", 1);
+//                     }); 
