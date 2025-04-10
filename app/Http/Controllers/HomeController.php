@@ -19,6 +19,11 @@ class HomeController extends Controller
     public function index()
     {
    
+        // return redirect("/car/search");
+        // return redirect()->route("car.show", ["car" => 1]);
+        // return redirect()->route("car.show", Car::first());
+        // return redirect()->away("https://google.com");
+
         $cars = Car::where("published_at", "<", now())
             // the importance of egar loading!!! to make your website work fast
             ->with(["primaryImage", "city", "maker", "carType", "fuelType", "carModel"])
