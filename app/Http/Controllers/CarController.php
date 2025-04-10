@@ -13,8 +13,9 @@ class CarController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
+        dd($request, request());
         $cars = User::find(1)
             ->cars()
             ->with(["primaryImage", "maker", "carModel"])
@@ -56,8 +57,40 @@ class CarController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Car $car)
+    public function show(Request $request, Car $car)
     {
+        // // If the request URL looks like this:
+        // // http://127.0.0.1:8000/car/1?page=1
+        // dump($request->path()); // Output: car/1
+        // dump($request->url()); // Output: http://127.0.0.1:8000/car/1
+        // dump($request->fullUrl()); // Output: http://127.0.0.1:8000/car/1?page=1
+        // dump($request->method()); // Output: GET
+        // if ($request->isMethod("post")) {
+        //     // If the request method is POST
+        // }
+        // if ($request->isXmlHttpRequest()) {
+        //     // If the request is an AJAX request
+        // }
+        // if ($request->is("admin/*")) {
+        //     // If the request URL matches the pattern admin/*
+        // }
+        // if ($request->routeIs("admin.*")) {
+        //     // If the route matches the pattern admin.*
+        // }
+        // if ($request->expectsJson()) {
+        //     // If the request JSON response
+        // }
+        // dump($request->fullUrlWithQuery(["sort" => "price"])); 
+        // // Output: http://127.0.0.1:8000/car/1?sort=price&page=1
+        // dump($request->fullUrlWithoutQuery(["page"])); 
+        // // Output: http://127.0.0.1:8000/car/1
+        // dump($request->host()); //Output: 127.0.0.1
+        // dump($request->httpHost()); //Output: 127.0.0.1:8000
+        // dump($request->schemeAndHttpHost()); //Output: http://127.0.0.1
+        // dump($request->header("Content-Type")); //Output: null
+        // dump($request->bearerToken()); //Output: null
+        // dump($request->ip()); //Output: 127.0.0.1
+
         return view("car.show", ["car" => $car]);
     }
 
