@@ -6,6 +6,7 @@ use App\Models\Car;
 use App\Models\CarImage;
 use Illuminate\Http\Request;
 use App\Models\User;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 class CarController extends Controller
 {
@@ -14,11 +15,15 @@ class CarController extends Controller
      */
     public function index()
     {
-        $cars = User::find(4)
-            ->with(["primaryImage", "maker", "carModel"])
+        $cars = User::find(1)
             ->cars()
+            ->with(["primaryImage", "maker", "carModel"])
             ->orderBy("created_at", "desc")
-            ->get();
+            ->paginate(15);
+            // ->withPath("/user/cars")
+            // ->appends(["sort" => "price"])
+            // ->withQueryString()
+            // ->fragment("cars")
         return view("car.index", ["cars" => $cars]);
     }
 
@@ -26,8 +31,9 @@ class CarController extends Controller
     {
         // TODO we come back to this
         $cars = User::find(4)
-            ->favoriteCars
-            ->with(["primaryImage", "city", "maker", "carType", "fuelType", "carModel"]);
+            ->favoriteCars()
+            ->with(["primaryImage", "city", "maker", "carType", "fuelType", "carModel"])
+            ->paginate(15);
         return view("car.watchlist", ["cars" => $cars]);
     }
 
@@ -86,20 +92,9 @@ class CarController extends Controller
             ->with(["primaryImage", "city", "maker", "carType", "fuelType", "carModel"])
             ->orderBy("published_at", "desc");
         
-        // Join cars table and cities table together when cities.id = cars.city_id, and filer it by cities.state_id
-        $query->join("cities", "cities.id", "=", "cars.city_id")
-            ->join("car_types", "car_types.id", "=", "cars.car_type_id")
-            ->where("cities.state_id", 1)
-            ->where("car_types.name", "SUV");
+        $cars = $query->paginate(15);
 
-        // Select all the cars values and name of cities table as city_name
-        // $query->select("cars.*", "cities.name as city_name");
-
-        $carCount = $query->count();
-        $cars = $query->limit(value: 30)->get();
-
-        dd($cars[0]);
-        return view("car.search", ["cars" => $cars, "carCount" => $carCount]);
+        return view("car.search", ["cars" => $cars]);
     }
 }
 
