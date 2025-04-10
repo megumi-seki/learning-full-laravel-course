@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Car;
+use App\Models\CarImage;
 use Illuminate\Http\Request;
 use App\Models\User;
 
@@ -142,3 +143,206 @@ $cars = $query->reorder("price")->get();*/
 //                     // ->orOn(/* Second Condition */)
 //                     ->where("car_images.position", "=", 1);
 //                     }); 
+
+
+
+/*// Where Clauses
+$cars = Car::where("year", "=", 2020)
+    ->where("price", ">", 10000)
+    ->where("address", "like", "%york%")
+    ->get(); // Or
+$cars = Car::where([
+    ["year", "=", 2020],
+    ["price", ">", 10000],
+    ["address", "like", "%york%"]
+])->get();
+
+// Or Where Clauses
+// Select very old cars or very new ones
+$cars = Car::where("year", "<", 1970)
+    ->orWhere("year", ">", 2022)
+    ->get();
+
+// Car where mileage is not grater than 100000
+$cars = Car::whereNot("mileage", ">", 100000)->get();
+
+// Car where address or description containe "York"
+$cars = Car::whereAny(["address", "description"], "like", "%York%")
+    ->get();
+
+//Cars where both address and description contains "York"
+$cars = Car::whereAll(["address", "description"], "like", "%York%")
+    ->get();
+
+// whereBetween / orWhereBetween
+// Select cars where year is between 2000 and 2020
+$cars = Car::whereBetween("year", [2000, 2020])->get();
+
+// whereNotBetween / orWhereNotBetween
+// Select cars where year is not between 2000 and 2020
+$cars = Car::whereNotBetween("year", [2000, 2020])->get();
+
+// whereNull / whereNotNull / orWhereNull / orWhereNotNull
+// Select cars which are not published yet
+$cars = Car::whereNull("published_at")->get();
+// Select cars which are published
+$cars = Car::whereNotNull("published_at")->get();
+
+// whereIn / whereNotIn / orWhereIn / orWhereNotIn
+// Select cars where maker_id is 1 or 2
+$cars = Car::whereIn("maker_id", [1, 2])->get();
+// Select cars where maker_id is not 1 or 2
+$cars = Car::whereNotIn("maker_id", [1, 2])->get();
+
+// Select users which are signed up with Google
+$users = User::whereNotNull("google_id");
+// Select cars for users whic are signed up with Google
+$users = User::whereIn("user_id", $users)->get();
+// Generated SQL:
+// select * from cars where user_id in (
+//     select id 
+//     from users
+//     where google_id is not null
+// )
+
+// whereDate / whereMonth / whereDay / whereYear / whereTime
+// published at specific date
+->whereDate("published_at", "2024-07-12")
+// published at specific month
+->whereMonth("published_at", "07")
+// published at the first day of the month
+->whereDay("published_at", "01")
+// published at last year
+->whereYear("published_at", "2024")
+// published at specific time
+->whereTime("published_at", "=", "11:20:45")
+
+// whereColumn / orWhereColumn
+// Created and updated at the same time
+->whereColumn("created_at", "=", "updated_at")
+// Updated at is greated than created at
+->whereColumn("updated_at", ">", "created_at")
+->whereColumn([
+    ["column1", "=", "column2"]
+    ["updated_at", ">", "created_at"]
+])
+
+// whereBetweenColumns / whereNotBetweenColumns / orWhereBetweenColumns / orWhereNotBetweenColumns
+$patients = DB::table("patients")
+            ->whereBetweenColumns(
+                "weight",
+                ["minimum_allowed_weight", "maximum_allowed_weight"]
+            )
+            ->get();
+
+$patients = DB::table()("patients")
+            ->whereNotBetweenColumns(
+                "weight",
+                ["minimum_allowed_weight", "maximum_allowed_weight"]
+            )
+            ->get();
+
+// Full Text Where Clauses (SQLite does not support this but the others do)
+$cars = Car::wehreFullText("description", "bmw")
+    ->get();*/
+
+
+
+
+
+
+
+/*
+// Multiple Where Grouping
+Car::where("year", ">=", 2010)
+    ->where("price", ">", 10000)
+    ->orWhere("price", "<", 5000);
+// Generated SQL:
+// select * from "cars"
+// where "year" >= 2010
+// and "price" > 10000
+// or "price" < 5000
+// This would be considered as 
+// (year >= 2010 AND price > 10000) OR price < 5000
+// so Logical Grouping is important
+Car::where("year", ">=", 2010)
+    ->where(function (Builder $query) {
+        $query->where("price", ">", 10000)
+              ->orWhere("price", "<", 5000);
+    });
+// Generated SQL:
+// select * from "cars"
+// where "year" >= 2010
+// and ("price" > 10000 or "price" < 5000)
+
+// Where Exists Clause
+
+// Select cars that have images
+$carsWithImages = Car::whereExists(function ($query) {
+    $query->select("id")
+        ->from("car_images")
+        ->whereColumn("car_images.car_id", "cars.id"); //laravel assum the parameter is equal
+})->get();
+// Or
+$carsWithImages = Car::whereExisits(
+    CarImage::select("id")
+        ->whereColumn("car_images.car_id", "cars.id")
+)->get();
+// Generated SQL:
+// select * from "cars"
+// where exists (
+//     select "id" from "car_images"
+//     where "cars_images"."car_id" = "cars"."id"
+// )
+
+
+
+
+
+// Subquety Where Clause
+// Find Sedan cars
+$sedanCars = Car::where(function (Builder $query) {
+    $query->select("name")
+        ->from("car_types")
+        ->whereColumn("cars.car_type_id", "car_types.id")
+        ->limit(1);
+}, "=", "Sedan")->get();
+// The same as
+$subquery = CarType::select("name")
+    ->whereColumn("cars.car_type_id", "car_types.id")
+    ->limit(1);
+$sedanCars = Car::where($subquery, "=", "Sedan")->get();
+// Generated SQL:
+// SELECT *
+// FROM "cars"
+// WHERE (
+//     SELECT "name"
+//     FROM "car_types"
+//     WHERE "cars"."car_type_id" = "car_types"."id"
+//     LIMIT 1
+// ) = "Sedan";
+
+// another example of subquery where clauses
+// Select cars which ha sprice bello acerage price
+$cars = Car::where("price", "<", function(Builder $query){
+    return $query->selectRaw("AVG(price)")->from("cars");
+})->get();
+// Generated SQL:
+// SELECT * FROM "cars"
+// WHERE "price" < (
+//     SELECT AVG(price) FROM "cars"
+// );
+
+
+
+
+
+// Query Debugging
+// Dump the query with paramenters
+Car::where("price", ">", 10000)->dump();
+// Dump and die
+Car::where("price", ">", 10000)->dd();
+// Dump the raw SQL, with parameters replaced already
+Car::where("price", ">", value: 10000)->toSql();
+// Dump raw SQL and die
+Car::where("price", ">", 10000)->ddRawSql();*/
