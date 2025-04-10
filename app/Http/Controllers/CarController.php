@@ -120,8 +120,23 @@ class CarController extends Controller
 
     public function search(Request $request)
     {
-        $query = Car::select("cars.*") // if you use join() method it's good practice to set select() like this
-            ->where("published_at", "<", now())
+        // dump(request()->all());
+        // dump(request()->only(["price_from", "price_to"]));
+        // dump(request()->except(["price_from", "price_to"]));
+        // dump(request()->get("price_from", 0));
+        // dump(request()->post("price", 0));
+        // dump(request()->input("price_from", 1));
+        // dump(request()->query("model_id", 1));
+        // dump(request()->has("maker_id"));
+        // dump(request()->filled("maker_id"));
+        // dump(request()->integer("price_from"));
+        // dump(request()->boolean("published"));
+        // dump(request()->date("published_at"));
+        // dump(request()->file("image"));
+    
+
+
+        $query = Car::where("published_at", "<", now())
             ->with(["primaryImage", "city", "maker", "carType", "fuelType", "carModel"])
             ->orderBy("published_at", "desc");
         
