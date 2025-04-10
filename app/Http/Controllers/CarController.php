@@ -15,7 +15,7 @@ class CarController extends Controller
      */
     public function index(Request $request)
     {
-        dd($request, request());
+        // dd($request, request());
         $cars = User::find(1)
             ->cars()
             ->with(["primaryImage", "maker", "carModel"])
@@ -118,7 +118,7 @@ class CarController extends Controller
         //
     }
 
-    public function search()
+    public function search(Request $request)
     {
         $query = Car::select("cars.*") // if you use join() method it's good practice to set select() like this
             ->where("published_at", "<", now())
