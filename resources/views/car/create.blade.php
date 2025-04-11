@@ -9,26 +9,34 @@
             class="card add-new-car-form"
           >
             @csrf
+            {{-- @dump($errors->get("maker_id"))
+            @dump($errors->all())
+            @dump($errors->has("maker_id")) --}}
+            @error("maker_id")
+              There is error
+              @enderror
             <div class="form-content">
               <div class="form-details">
                 <div class="row">
                   <div class="col">
-                    <div class="form-group">
+                    <div class="form-group @error('maker_id') has-error @enderror">
                       <label>Maker</label>
-                      <x-select-maker />
-                      <p class="error-message">This field is required</p>
+                      <x-select-maker :value="old('maker_id')" />
+                      <p class="error-message">{{ $errors->first("maker_id") }}</p>
                     </div>
                   </div>
                   <div class="col">
-                    <div class="form-group">
+                    <div class="form-group @error("car_model_id") has-error @enderror">
                       <label>Model</label>
-                      <x-select-car-model />
+                      <x-select-car-model :value="old('car_model_id')" />
+                      <p class="error-message">{{ $errors->first("car_model_id") }}</p>
                     </div>
                   </div>
                   <div class="col">
-                    <div class="form-group">
+                    <div class="form-group @error("year") has-error @enderror">
                       <label>Year</label>
-                      <x-select-year />
+                      <x-select-year :value="old('year')" />
+                      <p class="error-message">{{ $errors->first("year") }}</p>
                     </div>
                   </div>
                 </div>
