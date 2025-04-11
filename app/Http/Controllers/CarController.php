@@ -51,7 +51,22 @@ class CarController extends Controller
      */
     public function store(Request $request)
     {
-        //
+
+        $data = $request->all();
+        $featuresData = $data["features"] ?? [];
+        $images = /*(array)*/ $request->file("images") ?: [];
+
+        $data["user_id"] = 1;
+        $car = Car::create($data);
+
+        $car->features()->create($featuresData);
+
+        foreach ($images as $i => $image) {
+            $path = $image->store("images", "public");
+            $car->images()->create(["image_path" => $path, "position" => $i + 1]);
+        }       
+
+        return redirect()->route("car.index");
     }
 
     /**
@@ -59,38 +74,9 @@ class CarController extends Controller
      */
     public function show(Request $request, Car $car)
     {
-        // // If the request URL looks like this:
-        // // http://127.0.0.1:8000/car/1?page=1
-        // dump($request->path()); // Output: car/1
-        // dump($request->url()); // Output: http://127.0.0.1:8000/car/1
-        // dump($request->fullUrl()); // Output: http://127.0.0.1:8000/car/1?page=1
-        // dump($request->method()); // Output: GET
-        // if ($request->isMethod("post")) {
-        //     // If the request method is POST
-        // }
-        // if ($request->isXmlHttpRequest()) {
-        //     // If the request is an AJAX request
-        // }
-        // if ($request->is("admin/*")) {
-        //     // If the request URL matches the pattern admin/*
-        // }
-        // if ($request->routeIs("admin.*")) {
-        //     // If the route matches the pattern admin.*
-        // }
-        // if ($request->expectsJson()) {
-        //     // If the request JSON response
-        // }
-        // dump($request->fullUrlWithQuery(["sort" => "price"])); 
-        // // Output: http://127.0.0.1:8000/car/1?sort=price&page=1
-        // dump($request->fullUrlWithoutQuery(["page"])); 
-        // // Output: http://127.0.0.1:8000/car/1
-        // dump($request->host()); //Output: 127.0.0.1
-        // dump($request->httpHost()); //Output: 127.0.0.1:8000
-        // dump($request->schemeAndHttpHost()); //Output: http://127.0.0.1
-        // dump($request->header("Content-Type")); //Output: null
-        // dump($request->bearerToken()); //Output: null
-        // dump($request->ip()); //Output: 127.0.0.1
-
+        if(!$car->published_at) {
+            abort(404);
+        }
         return view("car.show", ["car" => $car]);
     }
 
@@ -120,27 +106,66 @@ class CarController extends Controller
 
     public function search(Request $request)
     {
-        // dump(request()->all());
-        // dump(request()->only(["price_from", "price_to"]));
-        // dump(request()->except(["price_from", "price_to"]));
-        // dump(request()->get("price_from", 0));
-        // dump(request()->post("price", 0));
-        // dump(request()->input("price_from", 1));
-        // dump(request()->query("model_id", 1));
-        // dump(request()->has("maker_id"));
-        // dump(request()->filled("maker_id"));
-        // dump(request()->integer("price_from"));
-        // dump(request()->boolean("published"));
-        // dump(request()->date("published_at"));
-        // dump(request()->file("image"));
-    
-
+        $maker = $request->integer("maker_id");
+        $carModel = $request->integer("car_model_id");
+        $carType = $request->integer("car_type_id");
+        $fuelType = $request->integer("fuel_type_id");
+        $state = $request->integer("state_id");
+        $city = $request->integer("city_id");
+        $yearFrom = $request->integer("year_from");
+        $yearTo = $request->integer("year_to");
+        $priceFrom = $request->integer("price_from");
+        $priceTo = $request->integer("price_to");
+        $mileage = $request->integer("mileage");
+        $sort = $request->input("sort", "-published_at");
 
         $query = Car::where("published_at", "<", now())
-            ->with(["primaryImage", "city", "maker", "carType", "fuelType", "carModel"])
-            ->orderBy("published_at", "desc");
-        
-        $cars = $query->paginate(15);
+            ->with(["primaryImage", "city", "maker", "carType", "fuelType", "carModel"]);
+
+        if ($maker) {
+            $query->where("maker_id", $maker);
+        }
+        if ($carModel) {
+            $query->where("car_model_id", $carModel);
+        }
+        if ($state) {
+            $query->join("cities", "cities.id", "=", "cars.city_id")
+                ->where("cities.state_id", $state);
+        }
+        if ($city) {
+            $query->where("city_id", $city);
+        }
+        if ($carType) {
+            $query->where("car_type_id", $carType);
+        }
+        if ($fuelType) {
+            $query->where("fuel_type_id", $fuelType);
+        }
+        if ($yearFrom) {
+            $query->where("year", ">=", $yearFrom);
+        }
+        if ($yearTo) {
+            $query->where("year", "<=", $yearTo);
+        }
+        if ($priceFrom) {
+            $query->where("price", ">=", $priceFrom);
+        }
+        if ($priceTo) {
+            $query->where("price", "<=", $priceTo);
+        }
+        if ($mileage) {
+            $query->where("mileage", "<=", $mileage);
+        }
+
+        if (str_starts_with($sort, "-")) {
+            $sort = subStr($sort, 1);
+            $query->orderBy($sort, "desc");
+        } else {
+            $query->orderBy($sort);
+        }
+       
+        $cars = $query->paginate(15)
+                      ->withQueryString();
 
         return view("car.search", ["cars" => $cars]);
     }

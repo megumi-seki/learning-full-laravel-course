@@ -3,7 +3,7 @@
 <div class="car-item card">
     <a href="{{ route("car.show", parameters: $car->id) }}">
       <img
-        src="{{ $car->primaryImage->image_path }}"
+        src="{{ $car->primaryImage?->getUrl() ?: '/img/no-image.jpg'}}"
         alt=""
         class="car-item-img rounded-t"
       />
