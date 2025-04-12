@@ -9,6 +9,9 @@ use App\Models\User;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
+use Illuminate\Validation\Rules\File;
+use App\Rules\Phone;
+use Closure;
 
 class CarController extends Controller
 {
@@ -59,24 +62,44 @@ class CarController extends Controller
             "maker_id" => "required",
             "car_model_id" => "required",
             "year" => ["required", "integer", "min:1900", "max:" .date(format: "Y")],
-            // "another_field" => Rule::requiredIf(fn() => true)
-        ], [
-            "required" => "Please fill :attribute field",
-        ], [
-            "maker_id" => "My Maker",
-            "car_model_id" => "Model"
+            // "phone" => new Phone(),
+            // "phone" => function (string $attribute, mixed $value, Closure $fail): void
+            // {
+            //     if (strlen($value) !== 9) {
+            //         $fail("the {$attribute} needs to be 9 characters");
+            //     }
+            // },
+            "price" => "required|integer|min:0",
+            "vin" => "required|string|size:17",
+            "mileage" => "required|integer|min:0",
+            "car_type_id" => "required|exists:car_types,id",
+            "fuel_type_id" => "required|exists:fuel_types,id",
+            "city_id" => "required|exists:cities,id",
+            "address" => "required|string|min:9",
+            "description" => "nullable|string",
+            "published_at" => "nullable|string",
+            "phone" => "required|string|min:9",
+            "features" => "array",
+            "features.*" => "string",
+            "images" => "array",
+            // "images.*" => "image|mimes:jpeg,png,jpg,gif,svg|max:2048"
+            "images.*" => File::image()
+                // ->min()
+                ->max(2048)
+                // ->dimension(Rule::dimensions()->maxWidth(1000)->maxHeight(10000))
         ]);
-        $validator = Validator::make($request->all(), [
-            "maker_id" => "required",
-            "car_model_id" => "required",
-            "year" => ["required", "integer", "min:1900", "max:" .date(format: "Y")],
-            // "another_field" => Rule::requiredIf(fn() => true)
-        ], [
-            "required" => "Please fill :attribute field",
-        ], [
-            "maker_id" => "My Maker",
-            "car_model_id" => "Model"
-        ]);
+
+        // $validator = Validator::make($request->all(), [
+        //     "maker_id" => "required",
+        //     "car_model_id" => "required",
+        //     "year" => ["required", "integer", "min:1900", "max:" .date(format: "Y")],
+        //     // "another_field" => Rule::requiredIf(fn() => true)
+        // ], [
+        //     "required" => "Please fill :attribute field",
+        // ], [
+        //     "maker_id" => "My Maker",
+        //     "car_model_id" => "Model"
+        // ]);
 
         // if ($validator->fails()) {
         //     //
@@ -89,7 +112,7 @@ class CarController extends Controller
         // $data = $validator->safe()->only(["maker_id", "model_id"]);
         // $data = $validator->safe()->except(["year"]);
 
-        dd( $data);
+        // dd( $data);
         // Get features data
         $featuresData = $data["features"] ?? [];
         // Get images
