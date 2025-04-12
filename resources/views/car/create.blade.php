@@ -13,9 +13,9 @@
             {{-- @dump($errors->get("maker_id"))
             @dump($errors->all())
             @dump($errors->has("maker_id")) --}}
-            @error("maker_id")
+            {{-- @error("maker_id")
               There is error
-              @enderror
+              @enderror --}}
             <div class="form-content">
               <div class="form-details">
                 <div class="row">
@@ -118,6 +118,12 @@
                 </div>
               </div>
               <div class="form-images">
+                {{-- @dump($errors->get("images.*")) --}}
+                @foreach ($errors->get("images.*") as $imageErrors)
+                  @foreach ($imageErrors as $err)
+                    <div class="text-error mb-small">{{ $err }}</div>                    
+                  @endforeach
+                @endforeach
                 <div class="form-image-upload">
                   <div class="upload-placeholder">
                     <svg

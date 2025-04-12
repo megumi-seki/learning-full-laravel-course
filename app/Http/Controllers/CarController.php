@@ -2,16 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreCarRequest;
 use App\Models\Car;
-use App\Models\CarImage;
 use Illuminate\Http\Request;
 use App\Models\User;
-use Illuminate\Pagination\LengthAwarePaginator;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Validation\Rule;
-use Illuminate\Validation\Rules\File;
-use App\Rules\Phone;
-use Closure;
+use Illuminate\Support\Facades\Auth;
 
 class CarController extends Controller
 {
@@ -35,7 +30,6 @@ class CarController extends Controller
 
     public function watchlist()
     {
-        // TODO we come back to this
         $cars = User::find(4)
             ->favoriteCars()
             ->with(["primaryImage", "city", "maker", "carType", "fuelType", "carModel"])
@@ -54,73 +48,22 @@ class CarController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreCarRequest $request)
     {
+        // Get validated data
+        $data = $request->validated();
+        $data2 = $request->safe()->only(["maker_id", "car_model_id"]);
+        $data3 = $request->safe()->except(["published_at"]);
+        $data4 = $request->safe()->merge(["user_id" => Auth::id()]);
 
-        // Get request data. We must not use all()!!
-        $data = $request->validate( [
-            "maker_id" => "required",
-            "car_model_id" => "required",
-            "year" => ["required", "integer", "min:1900", "max:" .date(format: "Y")],
-            // "phone" => new Phone(),
-            // "phone" => function (string $attribute, mixed $value, Closure $fail): void
-            // {
-            //     if (strlen($value) !== 9) {
-            //         $fail("the {$attribute} needs to be 9 characters");
-            //     }
-            // },
-            "price" => "required|integer|min:0",
-            "vin" => "required|string|size:17",
-            "mileage" => "required|integer|min:0",
-            "car_type_id" => "required|exists:car_types,id",
-            "fuel_type_id" => "required|exists:fuel_types,id",
-            "city_id" => "required|exists:cities,id",
-            "address" => "required|string|min:9",
-            "description" => "nullable|string",
-            "published_at" => "nullable|string",
-            "phone" => "required|string|min:9",
-            "features" => "array",
-            "features.*" => "string",
-            "images" => "array",
-            // "images.*" => "image|mimes:jpeg,png,jpg,gif,svg|max:2048"
-            "images.*" => File::image()
-                // ->min()
-                ->max(2048)
-                // ->dimension(Rule::dimensions()->maxWidth(1000)->maxHeight(10000))
-        ]);
-
-        // $validator = Validator::make($request->all(), [
-        //     "maker_id" => "required",
-        //     "car_model_id" => "required",
-        //     "year" => ["required", "integer", "min:1900", "max:" .date(format: "Y")],
-        //     // "another_field" => Rule::requiredIf(fn() => true)
-        // ], [
-        //     "required" => "Please fill :attribute field",
-        // ], [
-        //     "maker_id" => "My Maker",
-        //     "car_model_id" => "Model"
-        // ]);
-
-        // if ($validator->fails()) {
-        //     //
-        //     return redirect(route("car.create"))
-        //         ->withErrors($validator)
-        //         ->withInput();
-        // }
-
-        // $data = $validator->validated();
-        // $data = $validator->safe()->only(["maker_id", "model_id"]);
-        // $data = $validator->safe()->except(["year"]);
-
-        // dd( $data);
         // Get features data
         $featuresData = $data["features"] ?? [];
         // Get images
-        $images = /*(array)*/ $request->file("images") ?: [];
+        $images = $request->file("images") ?: [];
 
         // Set user ID
         $data["user_id"] = 1;
-        // Create new Car
+        // Create new car
         $car = Car::create($data);
 
         $car->features()->create($featuresData);
