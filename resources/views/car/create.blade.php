@@ -118,7 +118,6 @@
                 </div>
               </div>
               <div class="form-images">
-                {{-- @dump($errors->get("images.*")) --}}
                 @foreach ($errors->get("images.*") as $imageErrors)
                   @foreach ($imageErrors as $err)
                     <div class="text-error mb-small">{{ $err }}</div>                    
@@ -142,9 +141,9 @@
                     </svg>
                   </div>
                   <input id="carFormImageUpload" type="file" name="images[]" multiple />
+                  </div>
+                  <div id="imagePreviews" class="car-form-images"></div>
                 </div>
-                <div id="imagePreviews" class="car-form-images"></div>
-              </div>
             </div>
             <div class="p-medium" style="width: 100%">
               <div class="flex justify-end gap-1">
