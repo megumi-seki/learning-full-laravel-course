@@ -17,16 +17,13 @@ class CarController extends Controller
      */
     public function index(Request $request)
     {
-        // dd($request, request());
+        // $request->session()->reflash();
+        // $request->session()->keep(["success"]);
         $cars = User::find(1)
             ->cars()
             ->with(["primaryImage", "maker", "carModel"])
             ->orderBy("created_at", "desc")
             ->paginate(15);
-            // ->withPath("/user/cars")
-            // ->appends(["sort" => "price"])
-            // ->withQueryString()
-            // ->fragment("cars")
         return view("car.index", ["cars" => $cars]);
     }
 
@@ -52,6 +49,7 @@ class CarController extends Controller
      */
     public function store(StoreCarRequest $request)
     {
+        
         // Get validated data
         $data = $request->validated();
         $data2 = $request->safe()->only(["maker_id", "car_model_id"]);
@@ -75,7 +73,9 @@ class CarController extends Controller
             $car->images()->create(["image_path" => $path, "position" => $i + 1]);
         }       
 
-        return redirect()->route("car.index");
+        return redirect()->route("car.index")
+            ->with("success", "Car was deleted");
+        
     }
 
     /**
@@ -122,7 +122,10 @@ class CarController extends Controller
         // Update Car features
         $car->features()->update($features);
 
-        return redirect()->route("car.index");
+        // $request->session()->flash("success", "Car was updated");
+
+        return redirect()->route("car.index")
+            ->with("success", "Car was updated");
     }
 
     /**
@@ -132,7 +135,8 @@ class CarController extends Controller
     {
         $car->delete();
 
-        return redirect()->route("car.index");
+        return redirect()->route("car.index")
+            ->with("success", "Car was deleted");
     }
 
     public function search(Request $request)
@@ -231,7 +235,8 @@ class CarController extends Controller
             $car->images()->where("id", $id)->update(["position" => $position]);
         }
 
-        return redirect()->back();
+        return redirect()->back()
+            ->with("success", "Car images were updated");
     }
 
     public function addImages(Request $request, Car $car) 
@@ -250,7 +255,8 @@ class CarController extends Controller
             $position++;
         }
 
-        return redirect()->back();
+        return redirect()->back()
+            ->with("success", "New images were updated");
     }
 
 }

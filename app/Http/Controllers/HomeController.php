@@ -11,18 +11,23 @@ use App\Models\CarType;
 use App\Models\User;
 use App\Models\Model;
 use Illuminate\Database\Eloquent\Factories\Sequence;
-
-
+use Illuminate\Http\Request;
 
 class HomeController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
    
-        // return redirect("/car/search");
-        // return redirect()->route("car.show", ["car" => 1]);
-        // return redirect()->route("car.show", Car::first());
-        // return redirect()->away("https://google.com");
+        // $user = $request->session()->get("user", "John");
+        // $all = $request->session()->all();
+        // dd($all);
+        // $user2 = session("user", "John);
+
+        // $request->session()->put("user", "Megumi");
+        // session(["user" => "Megumi"]);
+
+        $request->session()->forget("user");
+        // $user = $request->session()->remove("user");
 
         $cars = Car::where("published_at", "<", now())
             // the importance of egar loading!!! to make your website work fast
