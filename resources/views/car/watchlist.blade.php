@@ -6,7 +6,7 @@
         <div class="flex justify-between items-center">
           <h2>My Favourite Cars</h2>
           @if ($cars->total() > 0)
-              <div `class="pagination-summary">
+              <div class="pagination-summary">
                 <p>
                   Showing {{ $cars->firstItem() }} to
                   {{ $cars->lastItem() }} of {{ $cars->total() }} results.
@@ -19,6 +19,12 @@
             <x-car-item :$car :isInWatchlist="true"/>
           @endforeach
         </div>
+
+        @if ($cars->count() === 0)
+        <div class="text-center p-large">
+          You don't have any favorite cars
+        </div>
+        @endif
        
         {{ $cars->onEachSide(1)->links() }}
 

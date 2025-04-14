@@ -4,9 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreCarRequest;
 use App\Models\Car;
-use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Request;
-use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
@@ -17,23 +15,12 @@ class CarController extends Controller
      */
     public function index(Request $request)
     {
-        // $request->session()->reflash();
-        // $request->session()->keep(["success"]);
-        $cars = User::find(1)
+        $cars = $request->user()
             ->cars()
             ->with(["primaryImage", "maker", "carModel"])
             ->orderBy("created_at", "desc")
             ->paginate(15);
         return view("car.index", ["cars" => $cars]);
-    }
-
-    public function watchlist()
-    {
-        $cars = User::find(4)
-            ->favoriteCars()
-            ->with(["primaryImage", "city", "maker", "carType", "fuelType", "carModel"])
-            ->paginate(15);
-        return view("car.watchlist", ["cars" => $cars]);
     }
 
     /**
@@ -52,9 +39,9 @@ class CarController extends Controller
         
         // Get validated data
         $data = $request->validated();
-        $data2 = $request->safe()->only(["maker_id", "car_model_id"]);
-        $data3 = $request->safe()->except(["published_at"]);
-        $data4 = $request->safe()->merge(["user_id" => Auth::id()]);
+        // $data2 = $request->safe()->only(["maker_id", "car_model_id"]);
+        // $data3 = $request->safe()->except(["published_at"]);
+        // $data4 = $request->safe()->merge(["user_id" => Auth::id()]);
 
         // Get features data
         $featuresData = $data["features"] ?? [];
@@ -62,7 +49,8 @@ class CarController extends Controller
         $images = $request->file("images") ?: [];
 
         // Set user ID
-        $data["user_id"] = 1;
+        // $data["user_id"] = $request->user()->id();
+        $data["user_id"] = Auth::id();
         // Create new car
         $car = Car::create($data);
 
@@ -94,6 +82,9 @@ class CarController extends Controller
      */
     public function edit(Car $car)
     {
+        if ($car->user_id !== Auth::id()) {
+            abort(403); // 403 = forbidden Impirtant for sequlity!!
+        }
         return view("car.edit", ["car" => $car]);
     }
 
@@ -102,6 +93,9 @@ class CarController extends Controller
      */
     public function update(StoreCarRequest $request, Car $car)
     {
+        if ($car->user_id !== Auth::id()) {
+            abort(403); // 403 = forbidden
+        }
         $data = $request->validated();
         $features = array_merge([
             "air_conditioning" => 0,
@@ -119,10 +113,7 @@ class CarController extends Controller
         ], $data["features"] ?? []);
         $car->update($data);
 
-        // Update Car features
         $car->features()->update($features);
-
-        // $request->session()->flash("success", "Car was updated");
 
         return redirect()->route("car.index")
             ->with("success", "Car was updated");
@@ -133,6 +124,9 @@ class CarController extends Controller
      */
     public function destroy(Car $car)
     {
+        if ($car->user_id !== Auth::id()) {
+            abort(403); // 403 = forbidden
+        }
         $car->delete();
 
         return redirect()->route("car.index")
@@ -205,6 +199,15 @@ class CarController extends Controller
         return view("car.search", ["cars" => $cars]);
     }
 
+    public function watchlist()
+    {
+        $cars = Auth::user()
+            ->favoriteCars()
+            ->with(["primaryImage", "city", "maker", "carType", "fuelType", "carModel"])
+            ->paginate(15);
+        return view("car.watchlist", ["cars" => $cars]);
+    }
+
     public function carImages(Car $car)
     {
         return view("car.images", ["car" => $car]);
@@ -212,6 +215,10 @@ class CarController extends Controller
 
     public function updateImages(Request $request, Car $car)
     {
+        if ($car->user_id !== Auth::id()) {
+            abort(403); // 403 = forbidden
+        }
+
         $data = $request->validate([
             "delete_images" => "array",
             "delete_images.*" => "integer",
@@ -222,7 +229,6 @@ class CarController extends Controller
         $deleteImages = $data["delete_images"] ?? [];
         $positions = $data["positions"] ?? [];
 
-        // Select images to delete
         $imagesToDelete = $car->images()->whereIn("id", $deleteImages)->get();
         foreach ($imagesToDelete as $image) {
             if(Storage::disk("public")->exists($image->image_path))
@@ -241,10 +247,12 @@ class CarController extends Controller
 
     public function addImages(Request $request, Car $car) 
     {
-        // Get images from request
+        if ($car->user_id !== Auth::id()) {
+            abort(403); // 403 = forbidden
+        }
+
         $images = $request->file("images") ?? [];
 
-        // Select max position of car images
         $position = $car->images()->max("position") ?? 0;
         foreach ($images as $image) {
             $path = $image->store("images", "public");
