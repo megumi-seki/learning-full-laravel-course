@@ -5,11 +5,22 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreCarRequest;
 use App\Models\Car;
 use Illuminate\Http\Request;
+// use Illuminate\Routing\Controllers\Middleware;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
-class CarController extends Controller
+class CarController extends Controller /*  implements HasMiddleware */
 {
+    // public static function middleware(): array
+    // {
+    //     return [
+    //         "auth",
+    //         new Middleware("auth", except: ["show"], only: []),
+    //         function(Request $request, Closure $next) {
+
+    //         }
+    //     ];
+    // }
     /**
      * Display a listing of the resource.
      */
@@ -203,7 +214,7 @@ class CarController extends Controller
     {
         $cars = Auth::user()
             ->favoriteCars()
-            ->with(["primaryImage", "city", "maker", "carType", "fuelType", "carModel"])
+            ->with(relations: ["primaryImage", "city", "maker", "carType", "fuelType", "carModel"])
             ->paginate(15);
         return view("car.watchlist", ["cars" => $cars]);
     }
