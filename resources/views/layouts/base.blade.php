@@ -25,7 +25,10 @@
       rel="stylesheet"
     /> -->
 
-    <link rel="stylesheet" href="/css/app.css" />
+    {{-- <style>
+      {!! Vite::content("resources/css/app.css") !!}
+    </style> --}}
+    @vite(["resources/css/app.css", "resources/js/app.js"])
     <!-- <link rel="stylesheet" href="css/output.css" /> -->
   </head>
   <body @if($bodyClass)class="{{ $bodyClass }}"@endif>
@@ -38,6 +41,6 @@
       crossorigin="anonymous"
       referrerpolicy="no-referrer"
     ></script>
-    <script src="/js/app.js"></script>
+
   </body>
 </html>
