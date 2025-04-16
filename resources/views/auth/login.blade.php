@@ -1,5 +1,7 @@
 <x-guest-layout title="Login" bodyClass="page-login">
   <h1 class="auth-page-title">Login</h1>
+
+  {{ session("error") }}
     
   <form action="{{ route('login.store') }}" method="post">
     @csrf

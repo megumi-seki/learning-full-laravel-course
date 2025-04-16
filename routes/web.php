@@ -6,6 +6,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\PasswordResetController;
 use App\Http\Controllers\SignupController;
+use App\Http\Controllers\SocialiteController;
 use App\Http\Middleware\EnsureTodayIsWeekend;
 use Illuminate\Support\Facades\Route;
 
@@ -66,6 +67,9 @@ Route::post("/email/verification-notification", [EmailVerifyController::class, "
     ->middleware(["auth", "throttle:6,1"])
     ->name("verification.send");
 
+Route::get("/login/oauth/{provider}", [SocialiteController::class, "redirectToProvider"])
+    ->name("login.oauth");
+Route::get("/callback/oauth/{provider}", [SocialiteController::class,"handleCallback"]);
 
 
 
