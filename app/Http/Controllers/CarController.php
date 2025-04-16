@@ -7,6 +7,7 @@ use App\Models\Car;
 use Illuminate\Http\Request;
 // use Illuminate\Routing\Controllers\Middleware;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
 
 class CarController extends Controller /*  implements HasMiddleware */
@@ -39,6 +40,7 @@ class CarController extends Controller /*  implements HasMiddleware */
      */
     public function create()
     {
+        Gate::authorize("create", Car::class);
         return view("car.create");
     }
 
@@ -47,7 +49,8 @@ class CarController extends Controller /*  implements HasMiddleware */
      */
     public function store(StoreCarRequest $request)
     {
-        
+        Gate::authorize("create", Car::class);
+
         // Get validated data
         $data = $request->validated();
         // $data2 = $request->safe()->only(["maker_id", "car_model_id"]);
@@ -93,9 +96,14 @@ class CarController extends Controller /*  implements HasMiddleware */
      */
     public function edit(Car $car)
     {
-        if ($car->user_id !== Auth::id()) {
-            abort(403); // 403 = forbidden Impirtant for sequlity!!
-        }
+        // if (!Gate::allows("update-car", $car)) {
+        //     abort(403); 
+        // }
+        // if ($car->user_id !== Auth::id()) {
+        //     abort(403); // 403 = forbidden Impirtant for sequlity!!
+        // }
+        Gate::authorize("update", $car);
+
         return view("car.edit", ["car" => $car]);
     }
 
@@ -104,9 +112,15 @@ class CarController extends Controller /*  implements HasMiddleware */
      */
     public function update(StoreCarRequest $request, Car $car)
     {
-        if ($car->user_id !== Auth::id()) {
-            abort(403); // 403 = forbidden
-        }
+        // if (!Gate::allows("update-car", $car)) {
+        //     abort(403); 
+        // }
+        // if ($car->user_id !== Auth::id()) {
+        //     abort(403); // 403 = forbidden
+        // }
+
+        Gate::authorize("update", $car);
+
         $data = $request->validated();
         $features = array_merge([
             "air_conditioning" => 0,
@@ -135,9 +149,15 @@ class CarController extends Controller /*  implements HasMiddleware */
      */
     public function destroy(Car $car)
     {
-        if ($car->user_id !== Auth::id()) {
-            abort(403); // 403 = forbidden
-        }
+        // if ($car->user_id !== Auth::id()) {
+        //     abort(403); // 403 = forbidden
+        // }
+        Gate::authorize("delete", $car);
+
+        // Gate::any(["update-car", "delete-car"], $car);
+        // Gate::none(["update-car", "delete-car"], $car);
+        // Gate::forUser($user)->denies();
+
         $car->delete();
 
         return redirect()->route("car.index")
@@ -213,14 +233,18 @@ class CarController extends Controller /*  implements HasMiddleware */
 
     public function carImages(Car $car)
     {
+        Gate::authorize("update", $car);
+
         return view("car.images", ["car" => $car]);
     }
 
     public function updateImages(Request $request, Car $car)
     {
-        if ($car->user_id !== Auth::id()) {
-            abort(403); // 403 = forbidden
-        }
+        Gate::authorize("update", $car);
+
+        // if ($car->user_id !== Auth::id()) {
+        //     abort(403); // 403 = forbidden
+        // }
 
         $data = $request->validate([
             "delete_images" => "array",
@@ -250,9 +274,11 @@ class CarController extends Controller /*  implements HasMiddleware */
 
     public function addImages(Request $request, Car $car) 
     {
-        if ($car->user_id !== Auth::id()) {
-            abort(403); // 403 = forbidden
-        }
+        Gate::authorize("update", $car);
+
+        // if ($car->user_id !== Auth::id()) {
+        //     abort(403); // 403 = forbidden
+        // }
 
         $images = $request->file("images") ?? [];
 
