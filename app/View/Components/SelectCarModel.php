@@ -7,7 +7,7 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Support\Collection;
 use Illuminate\View\Component;
 use App\Models\CarModel;
-
+use Illuminate\Support\Facades\Cache;
 
 class SelectCarModel extends Component
 {
@@ -17,7 +17,9 @@ class SelectCarModel extends Component
      */
     public function __construct()
     {
-        $this->models = CarModel::orderBy("name")->get();
+        $this->models = Cache::rememberForever("caModels", function() {
+            return CarModel::orderBy("name")->get();
+        });
     }
 
     /**

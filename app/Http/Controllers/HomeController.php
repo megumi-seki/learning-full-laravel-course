@@ -12,6 +12,7 @@ use App\Models\User;
 use App\Models\Model;
 use Illuminate\Database\Eloquent\Factories\Sequence;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 
 class HomeController extends Controller
 {
@@ -29,13 +30,14 @@ class HomeController extends Controller
         $request->session()->forget("user");
         // $user = $request->session()->remove("user");
 
-        $cars = Car::where("published_at", "<", now())
-            // the importance of egar loading!!! to make your website work fast
+        $cars = Cache::remember("home-cars", 60, function() {
+            return Car::where("published_at", "<", now())
             ->with(["primaryImage", "city", "maker", "carType", 
                 "fuelType", "carModel", "favouredUsers"])
             ->orderBy("published_at", "desc")
             ->limit(30)
             ->get();
+        });
 
         return view("home.index", ["cars" => $cars]);
     }
