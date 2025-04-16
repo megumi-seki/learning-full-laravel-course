@@ -234,9 +234,12 @@ document.addEventListener("DOMContentLoaded", function () {
             alert(response.data.message)
           })
            .catch(error => {
-            console.error(error.message)
+            console.error(error.response)
+            if (error?.response?.status === 401) {
+              alert("Please authenticate first to add cars into watchlist")
+            } else {
             alert("Internal Server Error. Please try again later")
-           })
+           }})
         })
       })
     }
