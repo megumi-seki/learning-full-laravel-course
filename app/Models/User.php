@@ -56,12 +56,19 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function favoriteCars(): BelongsToMany 
     {
-        return $this->belongsToMany(Car::class, "favorite_cars");
+        return $this->belongsToMany(Car::class, "favorite_cars")
+            ->withPivot("id")
+            ->orderBy("favorite_cars.id", "desc");
             // ->withTimestamps();
     }
 
     public function cars(): HasMany
     {
         return $this->hasMany(Car::class);
+    }
+
+    public function isOauthUser(): bool
+    {
+        return !$this->password;
     }
 }

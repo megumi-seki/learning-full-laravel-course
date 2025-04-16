@@ -31,7 +31,8 @@ class HomeController extends Controller
 
         $cars = Car::where("published_at", "<", now())
             // the importance of egar loading!!! to make your website work fast
-            ->with(["primaryImage", "city", "maker", "carType", "fuelType", "carModel"])
+            ->with(["primaryImage", "city", "maker", "carType", 
+                "fuelType", "carModel", "favouredUsers"])
             ->orderBy("published_at", "desc")
             ->limit(30)
             ->get();

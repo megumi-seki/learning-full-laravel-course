@@ -160,7 +160,8 @@ class CarController extends Controller /*  implements HasMiddleware */
         $sort = $request->input("sort", "-published_at");
 
         $query = Car::where("published_at", "<", now())
-            ->with(["primaryImage", "city", "maker", "carType", "fuelType", "carModel"]);
+            ->with(["primaryImage", "city", "maker", "carType", 
+                "fuelType", "carModel", "favouredUsers"]);
 
         if ($maker) {
             $query->where("maker_id", $maker);
@@ -208,15 +209,6 @@ class CarController extends Controller /*  implements HasMiddleware */
                       ->withQueryString();
 
         return view("car.search", ["cars" => $cars]);
-    }
-
-    public function watchlist()
-    {
-        $cars = Auth::user()
-            ->favoriteCars()
-            ->with(relations: ["primaryImage", "city", "maker", "carType", "fuelType", "carModel"])
-            ->paginate(15);
-        return view("car.watchlist", ["cars" => $cars]);
     }
 
     public function carImages(Car $car)
