@@ -118,7 +118,7 @@
               </div>
               <div class="form-images">
                 <p>
-                  Manage your images <a href="#">From here</a>
+                  Manage your images <a href="{{ route('car.images', $car) }}">From here</a>
                 </p>
                 <div class="car-form-images">
                   @foreach ($car->images as $image)

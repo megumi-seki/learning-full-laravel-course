@@ -5,6 +5,7 @@ namespace App\Policies;
 use App\Models\Car;
 use App\Models\User;
 use Illuminate\Auth\Access\Response;
+use Illuminate\Http\RedirectResponse;
 
 class CarPolicy
 {
@@ -21,7 +22,7 @@ class CarPolicy
     /**
      * Determine whether the user can create models.
      */
-    public function create(User $user): bool
+    public function create(User $user)
     {
         return !!$user->phone;
     }

@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 // use Illuminate\Routing\Controllers\Middleware;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Storage;
 
 class CarController extends Controller /*  implements HasMiddleware */
@@ -40,7 +41,10 @@ class CarController extends Controller /*  implements HasMiddleware */
      */
     public function create()
     {
-        Gate::authorize("create", Car::class);
+        if (!Gate::allows("create", Car::class)) {
+            return redirect()->route("profile.index")
+            ->with("warning", "Please provide phone number");
+        }
         return view("car.create");
     }
 
@@ -49,7 +53,10 @@ class CarController extends Controller /*  implements HasMiddleware */
      */
     public function store(StoreCarRequest $request)
     {
-        Gate::authorize("create", Car::class);
+        if (!Gate::allows("create", Car::class)) {
+            return redirect()->route("profile.index")
+            ->with("warning", "Please provide phone number");
+        }
 
         // Get validated data
         $data = $request->validated();
@@ -296,4 +303,8 @@ class CarController extends Controller /*  implements HasMiddleware */
             ->with("success", "New images were updated");
     }
 
+    public function showPhone(Car $car)
+    {
+        return response()->json(["phone" => $car->phone]);
+    }
 }

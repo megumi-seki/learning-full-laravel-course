@@ -222,6 +222,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
       buttons.forEach((button) => {
         button.addEventListener("click", ev => {
+          debugger;
           const button = ev.currentTarget;
           const url = button.dataset.url;
           axios.post(url).then((response) => {
@@ -233,8 +234,25 @@ document.addEventListener("DOMContentLoaded", function () {
             alert(response.data.message)
           })
            .catch(error => {
+            console.error(error.message)
             alert("Internal Server Error. Please try again later")
            })
+        })
+      })
+    }
+
+    const initShowPhoneNumber = () => {
+      const span = document.querySelector(".car-details-phone-view");
+
+      span.addEventListener("click", ev => {
+        ev.preventDefault();
+        const url = span.dataset.url;
+        axios.post(url).then(response => {
+          const phone = response.data.phone
+          const a = span.parentElement;
+          a.href = "tel:" + phone;
+          const phoneEl = a.querySelector(".text-phone")
+          phoneEl.innerText = phone;
         })
       })
     }
@@ -247,7 +265,8 @@ document.addEventListener("DOMContentLoaded", function () {
     initCascadingDropdown('#makerSelect', '#modelSelect');
     initCascadingDropdown('#stateSelect', '#citySelect');
     initSortingDropdown()
-    initAddToWatchlist();
+    initAddToWatchlist()
+    initShowPhoneNumber()
   
     ScrollReveal().reveal(".hero-slide.active .hero-slider-title", {
       delay: 200,
