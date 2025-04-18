@@ -37,7 +37,7 @@ class StoreCarRequest extends FormRequest
             "fuel_type_id" => "required|exists:fuel_types,id",
             "state_id" => "required|exists:states,id",
             "city_id" => "required|exists:cities,id",
-            "address" => "required|string|min:9",
+            "address" => "required|string",
             "description" => "nullable|string",
             "published_at" => "nullable|string",
             "phone" => "required|string|min:9",

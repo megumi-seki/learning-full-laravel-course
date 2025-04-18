@@ -39,6 +39,6 @@ Route::get("/car/{car}", [CarController::class, "show"])->name("car.show");
 Route::post("/car/phone/{car}", [CarController::class, "showPhone"])->name("car.showPhone");
 
 
-require_once __DIR__ . "/auth.php";
+require __DIR__ . "/auth.php";
 
 

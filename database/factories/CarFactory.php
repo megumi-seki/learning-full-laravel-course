@@ -9,6 +9,7 @@ use App\Models\CarType;
 use App\Models\FuelType;
 use App\Models\User;
 use App\Models\City;
+use App\Models\State;
 use Illuminate\Support\Str;
 
 

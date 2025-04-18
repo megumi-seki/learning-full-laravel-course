@@ -275,7 +275,7 @@ class CarController extends Controller /*  implements HasMiddleware */
             $car->images()->where("id", $id)->update(["position" => $position]);
         }
 
-        return redirect()->back()
+        return redirect()->route("car.images", $car)
             ->with("success", "Car images were updated");
     }
 
@@ -299,7 +299,7 @@ class CarController extends Controller /*  implements HasMiddleware */
             $position++;
         }
 
-        return redirect()->back()
+        return redirect()->route("car.images", $car)
             ->with("success", "New images were updated");
     }
 
